@@ -1,0 +1,22 @@
+1401. Circle and Rectangle Overlapping
+
+  class Solution {
+public:
+    bool checkOverlap(int radius, int xCenter, int yCenter, int x1, int y1, int x2, int y2) {
+        // Closest point on rect to the circle center
+
+    int closestX = (xCenter < x1) ? x1 : (xCenter > x2) ? x2 : xCenter;
+
+        int closestY = (yCenter < y1) ? y1 : (yCenter > y2) ? y2 : yCenter;
+
+        
+        int dx = xCenter - closestX;
+        int dy = yCenter - closestY;
+
+         return (dx * dx + dy * dy) <= radius * radius;
+    }
+};
+
+tc: o(1)
+sc: o(1)
+
