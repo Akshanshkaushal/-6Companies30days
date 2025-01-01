@@ -20,3 +20,89 @@ public:
 tc: o(1)
 sc: o(1)
 
+1823. Find the Winner of the Circular Game
+
+class Solution {
+public:
+//Josephus problem.
+    int findTheWinner(int n, int k) {
+        vector<int> circle;
+        for (int i = 1; i <= n; i++) {
+            circle.push_back(i);
+        }
+        int cur_ind = 0;
+
+        while (circle.size() > 1) {
+            int next_to_remove = (cur_ind + k - 1) % circle.size();
+            circle.erase(circle.begin() + next_to_remove);
+            cur_ind = next_to_remove;
+        }
+
+        return circle[0];
+    }
+};
+Time Complexity (TC): O(n^2)
+Space Complexity (SC): O(n)
+
+Recursive sol:
+class Solution {
+public:
+    int findTheWinner(int n, int k) {
+        return recursion(n, k) + 1;
+    }
+
+private:
+    int recursion(int n, int k) {
+        if (n == 1) {
+            return 0;
+        }
+        return (recursion(n - 1, k) + k) % n;
+    }
+};
+
+
+354. Russian Doll Envelopes
+class Solution {
+private:
+static bool cmp(vector<int> &a, vector<int> &b)
+    {
+        // If the widths are equal, sort in descending order of heights
+        if (a[0] == b[0])
+        {
+            return a[1] > b[1];
+        }
+
+        // Sort in ascending order of widths
+        return a[0] < b[0];
+    }
+
+int solveBS(int n,vector<vector<int>>& nums)
+    {
+            sort(nums.begin(),nums.end(),cmp);
+
+            vector<int> ans;
+            ans.push_back(nums[0][1]);
+
+            for(int i=1;i<n;i++)
+            {
+                if(nums[i][1]>ans.back()) ans.push_back(nums[i][1]);
+                else
+                {
+                    //find index of just greater element in ans
+                    int index=lower_bound(ans.begin(),ans.end(),nums[i][1])-ans.begin();
+                    ans[index]=nums[i][1];
+                }
+            }
+
+            return ans.size();
+    }       
+public:
+    int maxEnvelopes(vector<vector<int>>& envelopes) {
+        int n=envelopes.size();
+        return solveBS(n,envelopes);      
+    }
+};
+
+
+
+
