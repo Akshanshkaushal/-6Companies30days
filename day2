@@ -62,3 +62,53 @@ private:
         return sum / count;
     }
 };
+
+
+
+497. Random Point in Non-overlapping Rectangles
+class Solution {
+public:
+    int numRectangles; // Number of rectangles
+    long totalArea;    // Total area of all rectangles combined
+    vector<vector<int>> rectangles; // Stores the input rectangles
+    vector<long> prefixAreas; // Prefix sum of areas for weighted random selection
+
+    // Constructor: Initializes the class with the list of rectangles
+    Solution(vector<vector<int>>& rects) {
+        numRectangles = rects.size();
+        totalArea = 0;
+
+        for (auto& rect : rects) {
+            // Calculate the area of the current rectangle
+            long currentArea = (long)(rect[2] - rect[0] + 1) * (rect[3] - rect[1] + 1);
+            totalArea += currentArea;
+
+            // Store cumulative area for weighted random selection
+            prefixAreas.push_back(totalArea);
+
+            // Store the rectangle coordinates
+            rectangles.push_back(rect);
+        }
+    }
+
+    // Picks a random point from the rectangles
+    vector<int> pick() {
+        // Generate a random number in the range [0, totalArea - 1]
+        int randomAreaIndex = rand() % totalArea;
+
+        // Find the rectangle corresponding to this random area
+        int selectedRectangleIndex = upper_bound(prefixAreas.begin(), prefixAreas.end(), randomAreaIndex) - prefixAreas.begin();
+        auto& selectedRectangle = rectangles[selectedRectangleIndex];
+
+        // Calculate the range of x and y coordinates within the rectangle
+        int xRange = selectedRectangle[2] - selectedRectangle[0] + 1; // Width of the rectangle
+        int yRange = selectedRectangle[3] - selectedRectangle[1] + 1; // Height of the rectangle
+
+        // Generate random x and y coordinates within the selected rectangle
+        int randomX = selectedRectangle[0] + rand() % xRange;
+        int randomY = selectedRectangle[1] + rand() % yRange;
+
+        return {randomX, randomY};
+    }
+};
+
